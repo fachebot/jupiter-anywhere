@@ -135,6 +135,9 @@
 
             const config = {
                 displayMode: "widget",
+                widgetStyle: {
+                    position: "bottom-left"
+                },
                 integratedTargetId: CONFIG.TARGET_DIV_ID,
             };
 
