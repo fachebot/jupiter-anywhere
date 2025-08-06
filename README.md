@@ -1,2 +1,8 @@
-# jupiter-anywhere
-Jupiter Anywhere - 让 Jupiter 交易无处不在
+# Jupiter Anywhere 🌐
+让 Jupiter 交易无处不在的油猴脚本 - 在任意网站智能集成 Solana 最佳交易聚合器
+
+## 🎯 核心功能
+⚡ 一键安装，随处交易
+* 🔧 零配置: 安装即用，无需任何设置
+* 🌍 全网支持: 在任意网站都能使用 Jupiter 交易
+* 🎨 无缝集成: 不影响原网站功能和样式
