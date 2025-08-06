@@ -1,7 +1,7 @@
 # Jupiter Anywhere 🌐
-<img width="630" height="1261" alt="image" src="https://github.com/user-attachments/assets/db24b75e-4ded-40e4-a76b-87b1a99bd5a8" />
-
 让 Jupiter 交易无处不在的油猴脚本 - 在任意网站智能集成 Solana 最佳交易聚合器
+
+<img width="630" height="1261" alt="image" src="https://github.com/user-attachments/assets/db24b75e-4ded-40e4-a76b-87b1a99bd5a8" />
 
 ## 🎯 核心功能
 ⚡ 一键安装，随处交易
