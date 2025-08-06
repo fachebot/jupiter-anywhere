@@ -1,7 +1,7 @@
 # Jupiter Anywhere 🌐
-让 Jupiter 交易无处不在的油猴脚本 - 在任意网站智能集成 Solana 最佳交易聚合器
+<img width="630" height="1261" alt="image" src="https://github.com/user-attachments/assets/db24b75e-4ded-40e4-a76b-87b1a99bd5a8" />
 
-<img width="705" height="1274" alt="image" src="https://github.com/user-attachments/assets/4de0ac84-2894-4358-9b1d-34fd6d534edc" />
+让 Jupiter 交易无处不在的油猴脚本 - 在任意网站智能集成 Solana 最佳交易聚合器
 
 ## 🎯 核心功能
 ⚡ 一键安装，随处交易
@@ -23,7 +23,7 @@
 ### 第二步：安装脚本
 1. 打开 Tampermonkey 管理面板
 2. 点击 "创建新脚本"
-3. 复制粘贴 `main.js` 脚本代码
+3. 复制粘贴 [main.js](main.js) 脚本代码
 4. 保存并启用
 
 ### 第三步：开始使用
