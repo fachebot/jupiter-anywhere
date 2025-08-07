@@ -24,7 +24,7 @@
     MAX_RETRY_COUNT: 3,
     RETRY_DELAY: 1000,
     INITIAL_AMOUNT: "100000000",
-    INITIAL_INPUT_MINT: "So11111111111111111111111111111111111111112",
+    INITIAL_INPUT_MINT: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
   };
 
   // ==================== 工具函数 ====================
@@ -94,32 +94,44 @@
      * 从GMGN URL中提取token地址
      * @returns {string|null} token地址或null
      */
-    static getGMGNTokenAddress() {
-      try {
-        const url = new URL(window.location.href);
+static getGMGNTokenAddress() {
+  try {
+    const url = new URL(window.location.href);
 
-        // 检查是否为GMGN网站的token页面
-        if (
-          url.hostname === "gmgn.ai" &&
-          url.pathname.startsWith("/sol/token/")
-        ) {
-          const pathParts = url.pathname.split("/").filter((part) => part);
-
-          if (
-            pathParts.length >= 3 &&
-            pathParts[0] === "sol" &&
-            pathParts[1] === "token"
-          ) {
-            const tokenAddress = pathParts[2];
-            Logger.success("检测到GMGN Token地址:", tokenAddress);
-            return tokenAddress;
-          }
-        }
-      } catch (error) {
-        Logger.error("解析URL时发生错误:", error);
-      }
+    // 检查是否为GMGN网站的token页面
+    if (url.hostname !== "gmgn.ai" || !url.pathname.startsWith("/sol/token/")) {
       return null;
     }
+
+    // 提取token路径部分
+    const tokenPath = url.pathname.replace("/sol/token/", "");
+    const fullTokenPart = tokenPath.split("/")[0];
+    
+    // 检查是否包含下划线分隔符
+    if (fullTokenPart.includes("_")) {
+      // 取下划线后面的部分作为真正的token地址
+      const tokenAddress = fullTokenPart.split("_").pop();
+      
+      if (tokenAddress && tokenAddress.length > 0) {
+        Logger.success("检测到GMGN Token地址:", tokenAddress);
+        return tokenAddress;
+      }
+    } else {
+      // 如果没有下划线，直接使用整个部分
+      if (fullTokenPart && fullTokenPart.length > 0) {
+        Logger.success("检测到GMGN Token地址:", fullTokenPart);
+        return fullTokenPart;
+      }
+    }
+
+    Logger.warn("未找到有效的token地址");
+    return null;
+
+  } catch (error) {
+    Logger.error("解析URL时发生错误:", error);
+    return null;
+  }
+}
   }
 
   /**
