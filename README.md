@@ -32,3 +32,27 @@
 ✅ 在 GMGN 代币页面，会自动识别并设置交易对
 
 ✅ 享受无处不在的 DeFi 交易体验！
+
+## ⚙️ 配置选项
+脚本提供灵活的配置选项，可根据需要调整：
+```js
+const CONFIG = {
+    // Jupiter 插件地址
+    JUPITER_SCRIPT_URL: 'https://plugin.jup.ag/plugin-v1.js',
+    
+    // 目标容器 ID
+    TARGET_DIV_ID: 'jupiter-plugin',
+    
+    // 时间设置
+    INIT_DELAY: 100,        // 初始化延迟 (毫秒)
+    LOAD_DELAY: 500,        // 页面加载延迟 (毫秒)
+    
+    // 重试设置
+    MAX_RETRY_COUNT: 3,     // 最大重试次数
+    RETRY_DELAY: 1000,      // 重试间隔 (毫秒)
+
+    // 交易设置
+    INITIAL_AMOUNT: "100000000",                                       // 默认金额
+    INITIAL_INPUT_MINT: "So11111111111111111111111111111111111111112"  // 默认输入代币
+};
+```
