@@ -18,7 +18,6 @@
   // ==================== 配置常量 ====================
   const CONFIG = {
     JUPITER_SCRIPT_URL: "https://plugin.jup.ag/plugin-v1.js",
-    TARGET_DIV_ID: "jupiter-plugin",
     INIT_DELAY: 100,
     LOAD_DELAY: 500,
     MAX_RETRY_COUNT: 3,
@@ -91,47 +90,163 @@
    */
   class TokenAddressParser {
     /**
-     * 从GMGN URL中提取token地址
+     * 从URL中提取token地址
      * @returns {string|null} token地址或null
      */
-static getGMGNTokenAddress() {
-  try {
-    const url = new URL(window.location.href);
+    static parseTokenAddress() {
+      try {
+        const url = new URL(window.location.href);
 
-    // 检查是否为GMGN网站的token页面
-    if (url.hostname !== "gmgn.ai" || !url.pathname.startsWith("/sol/token/")) {
+        // 检查是否为GMGN网站的token页面
+        if (
+          url.hostname === "gmgn.ai" &&
+          url.pathname.startsWith("/sol/token/")
+        ) {
+          return this.parseGMGNToken(url);
+        }
+
+        // 检查是否为debot.ai网站的token页面
+        if (url.hostname === "debot.ai" && url.pathname.startsWith("/token/")) {
+          return this.parseDebotToken(url);
+        }
+
+        return null;
+      } catch (error) {
+        Logger.error("解析URL时发生错误:", error);
+        return null;
+      }
+    }
+
+    /**
+     * 解析GMGN token地址
+     * @param {URL} url - URL对象
+     * @returns {string|null} token地址或null
+     */
+    static parseGMGNToken(url) {
+      try {
+        // 提取token路径部分
+        const tokenPath = url.pathname.replace("/sol/token/", "");
+        const fullTokenPart = tokenPath.split("/")[0];
+
+        // 检查是否包含下划线分隔符
+        if (fullTokenPart.includes("_")) {
+          // 取下划线后面的部分作为真正的token地址
+          const tokenAddress = fullTokenPart.split("_").pop();
+
+          if (tokenAddress && tokenAddress.length > 0) {
+            Logger.success("检测到GMGN Token地址:", tokenAddress);
+            return tokenAddress;
+          }
+        } else {
+          // 如果没有下划线，直接使用整个部分
+          if (fullTokenPart && fullTokenPart.length > 0) {
+            Logger.success("检测到GMGN Token地址:", fullTokenPart);
+            return fullTokenPart;
+          }
+        }
+
+        Logger.warn("未找到有效的GMGN token地址");
+        return null;
+      } catch (error) {
+        Logger.error("解析GMGN URL时发生错误:", error);
+        return null;
+      }
+    }
+
+    /**
+     * 解析debot.ai token地址
+     * @param {URL} url - URL对象
+     * @returns {string|null} token地址或null
+     */
+    static parseDebotToken(url) {
+      try {
+        // debot.ai URL格式: /token/solana/[可选前缀_]tokenAddress
+        // 例如: /token/solana/251185_2oQNkePakuPbHzrVVkQ875WHeewLHCd2cAwfwiLQbonk
+        // 或者: /token/solana/2oQNkePakuPbHzrVVkQ875WHeewLHCd2cAwfwiLQbonk
+
+        const pathParts = url.pathname
+          .split("/")
+          .filter((part) => part.length > 0);
+
+        // 检查路径格式: ['token', 'solana', tokenInfo]
+        if (
+          pathParts.length >= 3 &&
+          pathParts[0] === "token" &&
+          pathParts[1] === "solana"
+        ) {
+          const tokenInfo = pathParts[2];
+
+          if (!tokenInfo) {
+            Logger.warn("debot.ai URL中未找到token信息");
+            return null;
+          }
+
+          let tokenAddress;
+
+          // 检查是否包含下划线分隔符
+          if (tokenInfo.includes("_")) {
+            // 取下划线后面的部分作为真正的token地址
+            const parts = tokenInfo.split("_");
+            tokenAddress = parts[parts.length - 1]; // 取最后一部分
+          } else {
+            // 如果没有下划线，直接使用整个部分
+            tokenAddress = tokenInfo;
+          }
+
+          // 验证token地址格式（Solana地址通常是32-44个字符的base58编码）
+          if (
+            tokenAddress &&
+            tokenAddress.length >= 32 &&
+            tokenAddress.length <= 44
+          ) {
+            Logger.success("检测到debot.ai Token地址:", tokenAddress);
+            return tokenAddress;
+          } else {
+            Logger.warn("debot.ai token地址格式不正确:", tokenAddress);
+            return null;
+          }
+        }
+
+        Logger.warn("debot.ai URL格式不匹配");
+        return null;
+      } catch (error) {
+        Logger.error("解析debot.ai URL时发生错误:", error);
+        return null;
+      }
+    }
+
+    /**
+     * 验证Solana token地址格式
+     * @param {string} address - 地址字符串
+     * @returns {boolean} 是否为有效格式
+     */
+    static isValidSolanaAddress(address) {
+      if (!address || typeof address !== "string") {
+        return false;
+      }
+
+      // Solana地址是base58编码，长度通常在32-44个字符之间
+      const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+      return base58Regex.test(address);
+    }
+
+    /**
+     * 通用token地址获取方法（推荐使用这个）
+     * @returns {string|null} token地址或null
+     */
+    static getTokenAddress() {
+      const address = this.parseTokenAddress();
+
+      if (address && this.isValidSolanaAddress(address)) {
+        return address;
+      }
+
+      if (address) {
+        Logger.warn("检测到的地址格式可能不正确:", address);
+      }
+
       return null;
     }
-
-    // 提取token路径部分
-    const tokenPath = url.pathname.replace("/sol/token/", "");
-    const fullTokenPart = tokenPath.split("/")[0];
-    
-    // 检查是否包含下划线分隔符
-    if (fullTokenPart.includes("_")) {
-      // 取下划线后面的部分作为真正的token地址
-      const tokenAddress = fullTokenPart.split("_").pop();
-      
-      if (tokenAddress && tokenAddress.length > 0) {
-        Logger.success("检测到GMGN Token地址:", tokenAddress);
-        return tokenAddress;
-      }
-    } else {
-      // 如果没有下划线，直接使用整个部分
-      if (fullTokenPart && fullTokenPart.length > 0) {
-        Logger.success("检测到GMGN Token地址:", fullTokenPart);
-        return fullTokenPart;
-      }
-    }
-
-    Logger.warn("未找到有效的token地址");
-    return null;
-
-  } catch (error) {
-    Logger.error("解析URL时发生错误:", error);
-    return null;
-  }
-}
   }
 
   /**
@@ -156,7 +271,7 @@ static getGMGNTokenAddress() {
      * @returns {Object} Jupiter配置对象
      */
     generateConfig() {
-      const tokenAddress = TokenAddressParser.getGMGNTokenAddress();
+      const tokenAddress = TokenAddressParser.getTokenAddress();
 
       const config = {
         displayMode: "widget",
@@ -167,7 +282,10 @@ static getGMGNTokenAddress() {
           initialAmount: CONFIG.INITIAL_AMOUNT,
           initialInputMint: CONFIG.INITIAL_INPUT_MINT,
         },
-        integratedTargetId: CONFIG.TARGET_DIV_ID,
+        containerClassName: "asaa",
+        containerStyles: {
+          size: "20 px",
+        },
       };
 
       // 如果检测到token地址，设置为输出token
@@ -175,13 +293,51 @@ static getGMGNTokenAddress() {
         config.formProps = {
           ...config.formProps,
           swapMode: "ExactIn",
-
           initialOutputMint: tokenAddress,
         };
         Logger.info("已配置目标token:", tokenAddress);
       }
 
       return config;
+    }
+
+    /**
+     * 修改Jupiter插件容器样式
+     */
+    async modifyJupiterStyles() {
+      try {
+        // 等待DOM元素出现，最多等待5秒
+        const maxWaitTime = 5000;
+        const checkInterval = 100;
+        let waitTime = 0;
+
+        while (waitTime < maxWaitTime) {
+          const jupiterContainer = document.getElementById(
+            "jupiter-plugin-instance"
+          );
+
+          if (jupiterContainer) {
+            Logger.info("找到Jupiter容器，正在应用自定义样式...");
+
+            jupiterContainer.style.cssText += `
+            position: absolute;
+            z-index: 2147483647 !important;
+          `;
+
+            Logger.success("Jupiter容器样式修改成功！");
+            return true;
+          }
+
+          await delay(checkInterval);
+          waitTime += checkInterval;
+        }
+
+        Logger.warn("未找到Jupiter容器元素，样式修改失败");
+        return false;
+      } catch (error) {
+        Logger.error("修改Jupiter样式时发生错误:", error);
+        return false;
+      }
     }
 
     /**
@@ -199,6 +355,9 @@ static getGMGNTokenAddress() {
         Logger.info("正在初始化Jupiter插件...", config);
 
         await window.Jupiter.init(config);
+
+        // 在初始化完成后修改样式
+        await this.modifyJupiterStyles();
 
         this.isInitialized = true;
         this.retryCount = 0;
@@ -241,30 +400,6 @@ static getGMGNTokenAddress() {
    * DOM管理器
    */
   class DOMManager {
-    /**
-     * 创建或重新创建目标div
-     */
-    static createTargetDiv() {
-      // 移除已存在的div
-      const existingDiv = document.getElementById(CONFIG.TARGET_DIV_ID);
-      if (existingDiv) {
-        existingDiv.remove();
-        Logger.info("已移除旧的目标容器");
-      }
-
-      // 创建新的div
-      const div = document.createElement("div");
-      div.id = CONFIG.TARGET_DIV_ID;
-      div.style.cssText = `
-                position: relative;
-                z-index: 9999;
-                margin: 10px 0;
-            `;
-
-      document.body.appendChild(div);
-      Logger.success("已创建新的目标容器");
-    }
-
     /**
      * 加载Jupiter脚本
      * @returns {Promise<void>}
@@ -322,9 +457,6 @@ static getGMGNTokenAddress() {
 
       // 重置Jupiter管理器状态
       this.jupiterManager.reset();
-
-      // 重新创建目标容器
-      DOMManager.createTargetDiv();
 
       // 延迟后重新初始化
       await delay(CONFIG.INIT_DELAY);
@@ -385,13 +517,10 @@ static getGMGNTokenAddress() {
         await DOMManager.loadJupiterScript();
         await delay(CONFIG.INIT_DELAY);
 
-        // 2. 创建目标容器
-        DOMManager.createTargetDiv();
-
-        // 3. 启动页面监听器
+        // 2. 启动页面监听器
         this.pageWatcher.startWatching();
 
-        // 4. 初始化Jupiter插件
+        // 3. 初始化Jupiter插件
         await this.setupInitialLoad();
 
         Logger.success("🎉 Jupiter Plugin Enhanced 启动完成！");
