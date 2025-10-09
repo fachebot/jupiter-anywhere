@@ -20,6 +20,11 @@
 | 🔷 Edge  | [Edge 扩展商店](https://microsoftedge.microsoft.com/addons/detail/%E7%AF%A1%E6%94%B9%E7%8C%B4/iikmkjmpaadaobahmlepeloendndfphd) |
 | 🍎 Safari  | [Safari 扩展](https://apps.apple.com/us/app/tampermonkey-classic/id1482490089?mt=12) |
 
+安装成功后请打开浏览器 “**开发者模式**” 并勾选 “**允许运行用户脚本**” 选项。
+
+<img width="1170" height="861" alt="image" src="https://github.com/user-attachments/assets/b3bb2085-2e2c-45f3-9295-8455df8f554b" />
+
+
 ### 第二步：安装脚本
 1. 打开 Tampermonkey 管理面板
 2. 点击 "添加新脚本..."
