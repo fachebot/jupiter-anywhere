@@ -1,5 +1,5 @@
 # Jupiter Anywhere 🌐
-此脚本智能集成了 Solana 最佳交易聚合器，能够在任意网站上使用。通过此脚本，你可以在 gmgn.ai 或 debot.ai 的代币页面直接通过 Jupiter 进行代币交易，避免支付高达 1% 的交易手续费。结合 Solflare 的一次性钱包，你还可以免去交易确认，享受便捷快速的交易体验。
+此脚本智能集成了 Solana 最佳交易聚合器，能够在任意网站上使用。通过此脚本，你可以在 gmgn.ai 或 debot.ai 的代币页面直接通过 Jupiter 进行代币交易，避免支付高达 1% 的交易手续费(Jupiter仅收取0.1%手续费)。结合 Solflare 的一次性钱包，你还可以免去交易确认，享受便捷快速的交易体验。
 
 <img width="630" height="1261" alt="image" src="https://github.com/user-attachments/assets/db24b75e-4ded-40e4-a76b-87b1a99bd5a8" />
 
