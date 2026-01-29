@@ -45,7 +45,22 @@
 
 ### 安装步骤
 
-#### 方法一：从源码安装（推荐用于开发）
+#### 方法一：从 GitHub 下载安装（推荐普通用户）
+
+1. **下载项目文件**
+   - 访问项目 GitHub 页面：https://github.com/fachebot/jupiter-anywhere
+   - 点击页面右上角的绿色 **"Code"** 按钮
+   - 选择 **"Download ZIP"** 下载压缩包
+   - 将下载的 ZIP 文件解压到任意位置（如桌面或文档文件夹）
+
+2. **加载扩展**
+   - 打开 Chrome 浏览器，访问 `chrome://extensions/`
+   - 开启右上角的 **"开发者模式"**（Developer mode）开关
+   - 点击 **"加载已解压的扩展程序"**（Load unpacked）按钮
+   - 选择刚才解压的 `jupiter-anywhere` 文件夹
+   - 扩展安装完成！
+
+#### 方法二：从源码安装（推荐用于开发）
 
 1. **克隆仓库**
    ```bash
@@ -53,21 +68,14 @@
    cd jupiter-anywhere
    ```
 
-2. **生成图标（可选）**
-   
-   如果 `icons/` 目录中没有图标文件，运行以下命令生成：
-   ```bash
-   node scripts/generate-icons.js
-   ```
-
-3. **加载扩展**
+2. **加载扩展**
    - 打开 Chrome 浏览器，访问 `chrome://extensions/`
    - 开启右上角的 **"开发者模式"**
    - 点击 **"加载已解压的扩展程序"**
    - 选择 `jupiter-anywhere` 项目文件夹
    - 扩展安装完成！
 
-#### 方法二：从 Chrome Web Store 安装（即将推出）
+#### 方法三：从 Chrome Web Store 安装（即将推出）
 
 扩展正在审核中，审核通过后可直接从 Chrome Web Store 安装。
 
@@ -107,8 +115,6 @@ jupiter-anywhere/
 │   ├── icon16.png            # 16x16 图标
 │   ├── icon48.png            # 48x48 图标
 │   └── icon128.png           # 128x128 图标
-├── scripts/                   # 辅助脚本
-│   └── generate-icons.js     # 图标生成脚本（可选）
 ├── LICENSE                    # MIT 许可证
 └── README.md                  # 项目说明文档
 ```
