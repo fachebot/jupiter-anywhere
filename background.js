@@ -355,27 +355,97 @@ async function injectJupiterInit(tabId, tokenAddress) {
                 container.style.cssText += baseStyles;
                 console.log('[Jupiter Anywhere] 容器样式已更新');
                 
-                // 延迟设置内部交互元素可点击
-                setTimeout(() => {
-                  // 查找容器内所有可交互元素并启用点击
+                // 递归设置元素及其所有子元素的 pointer-events
+                // 由于容器设置了 pointer-events: none，需要为所有子元素设置 pointer-events: auto
+                function enablePointerEventsRecursive(element) {
+                  if (!element || element.nodeType !== 1) return; // 只处理元素节点
+                  
+                  // 为所有元素设置 pointer-events: auto（因为父容器是 none）
+                  // 这样可以确保所有子元素都能接收点击事件
+                  element.style.setProperty('pointer-events', 'auto', 'important');
+                  
+                  // 递归处理所有子元素（确保嵌套的元素也能被处理）
+                  Array.from(element.children).forEach(child => {
+                    enablePointerEventsRecursive(child);
+                  });
+                }
+                
+                // 使用选择器匹配并设置交互元素
+                function enableInteractiveElements() {
+                  const processedElements = new Set();
+                  
+                  // 方法1: 使用选择器匹配
                   interactiveSelectors.forEach(selector => {
                     try {
                       const elements = container.querySelectorAll(selector);
                       elements.forEach(el => {
-                        el.style.pointerEvents = 'auto';
+                        if (!processedElements.has(el)) {
+                          el.style.setProperty('pointer-events', 'auto', 'important');
+                          processedElements.add(el);
+                        }
                       });
                     } catch (e) {
                       // 忽略无效选择器
                     }
                   });
                   
-                  // 如果容器本身有直接的交互内容，也启用点击
-                  const containerChildren = Array.from(container.children);
-                  containerChildren.forEach(child => {
-                    child.style.pointerEvents = 'auto';
+                  // 方法2: 递归处理所有子元素（确保不遗漏）
+                  Array.from(container.children).forEach(child => {
+                    enablePointerEventsRecursive(child);
+                    processedElements.add(child);
                   });
                   
-                  console.log('[Jupiter Anywhere] 交互元素点击已启用');
+                  return processedElements.size;
+                }
+                
+                // 初始设置交互元素
+                setTimeout(() => {
+                  const count = enableInteractiveElements();
+                  console.log(`[Jupiter Anywhere] 交互元素点击已启用 (${count} 个元素)`);
+                  
+                  // 设置 MutationObserver 监听动态添加的元素
+                  const observer = new MutationObserver((mutations) => {
+                    let hasNewElements = false;
+                    mutations.forEach((mutation) => {
+                      mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1) { // 元素节点
+                          enablePointerEventsRecursive(node);
+                          hasNewElements = true;
+                        }
+                      });
+                    });
+                    if (hasNewElements) {
+                      console.log('[Jupiter Anywhere] 检测到新元素，已自动启用点击');
+                    }
+                  });
+                  
+                  // 开始监听容器内的变化
+                  observer.observe(container, {
+                    childList: true,
+                    subtree: true
+                  });
+                  
+                  // 定期检查机制（每3秒检查一次，作为后备方案）
+                  const checkInterval = setInterval(() => {
+                    const count = enableInteractiveElements();
+                    // 定期检查时总是执行，确保所有元素都被正确设置
+                    // 注意：这里不输出日志以避免控制台噪音，只在检测到新元素时输出
+                  }, 3000);
+                  
+                  // 清理：当容器被移除时停止观察和检查
+                  const containerObserver = new MutationObserver((mutations) => {
+                    if (!document.getElementById(containerId)) {
+                      observer.disconnect();
+                      clearInterval(checkInterval);
+                      containerObserver.disconnect();
+                      console.log('[Jupiter Anywhere] 容器已移除，停止监听');
+                    }
+                  });
+                  
+                  containerObserver.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                  });
                 }, interactiveDelay);
                 
                 return;
