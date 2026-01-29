@@ -47,14 +47,14 @@
 
   /**
    * 从 URL 中解析 token 地址
-   * 支持 gmgn.ai 和 debot.ai 网站的 URL 格式
+   * 支持多个网站的 URL 格式，所有解析都基于 pathname，忽略查询参数
    * @returns {string|null} 解析到的 token 地址，如果无法解析则返回 null
    */
   function parseTokenAddress() {
     try {
       const url = new URL(window.location.href);
 
-      // GMGN 网站
+      // GMGN 网站: /sol/token/{token}
       if (url.hostname === 'gmgn.ai' && url.pathname.startsWith('/sol/token/')) {
         const tokenPath = url.pathname.replace('/sol/token/', '');
         const fullTokenPart = tokenPath.split('/')[0];
@@ -65,7 +65,7 @@
         return fullTokenPart || null;
       }
 
-      // debot.ai 网站
+      // debot.ai 网站: /token/solana/{token}
       if (url.hostname === 'debot.ai' && url.pathname.startsWith('/token/')) {
         const pathParts = url.pathname.split('/').filter(p => p.length > 0);
         if (pathParts.length >= 3 && pathParts[0] === 'token' && pathParts[1] === 'solana') {
@@ -75,6 +75,38 @@
           }
           return tokenInfo;
         }
+      }
+
+      // xxyy.io 网站: /sol/{token}
+      if (url.hostname === 'www.xxyy.io' && url.pathname.startsWith('/sol/')) {
+        const token = url.pathname.replace('/sol/', '').split('/')[0];
+        return token || null;
+      }
+
+      // axiom.trade 网站: /meme/{token}
+      if (url.hostname === 'axiom.trade' && url.pathname.startsWith('/meme/')) {
+        const token = url.pathname.replace('/meme/', '').split('/')[0];
+        return token || null;
+      }
+
+      // ave.ai 网站: /token/{token}-solana
+      if (url.hostname === 'ave.ai' && url.pathname.startsWith('/token/')) {
+        const tokenPart = url.pathname.replace('/token/', '').split('/')[0];
+        // 移除 -solana 后缀
+        const token = tokenPart.replace('-solana', '');
+        return token || null;
+      }
+
+      // dbotx.com 网站: /token/solana/{token}
+      if (url.hostname === 'dbotx.com' && url.pathname.startsWith('/token/solana/')) {
+        const token = url.pathname.replace('/token/solana/', '').split('/')[0];
+        return token || null;
+      }
+
+      // defined.fi 网站: /sol/{token}
+      if (url.hostname === 'www.defined.fi' && url.pathname.startsWith('/sol/')) {
+        const token = url.pathname.replace('/sol/', '').split('/')[0];
+        return token || null;
       }
 
       return null;
