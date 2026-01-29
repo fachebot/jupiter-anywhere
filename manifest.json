@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Jupiter Anywhere",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "让 Jupiter 交易无处不在 - 在任意网站智能集成 Solana 最佳交易聚合器",
   "author": "fachebot",
   "homepage_url": "https://github.com/fachebot/jupiter-anywhere",
@@ -29,12 +29,6 @@
       "js": ["content.js"],
       "run_at": "document_end",
       "all_frames": false
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["js/plugin-v1.js"],
-      "matches": ["<all_urls>"]
     }
   ],
   "declarative_net_request": {
