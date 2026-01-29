@@ -4,7 +4,7 @@
  * 这种方式可以绕过页面的 CSP 限制
  */
 
-const JUPITER_SCRIPT_URL = 'https://plugin.jup.ag/plugin-v1.js';
+const JUPITER_SCRIPT_URL = 'https://jupiter-plugin-plus.pages.dev/plugin-v1.js';
 
 /**
  * 下载并缓存 Jupiter 脚本
@@ -105,6 +105,7 @@ async function injectJupiterInit(tabId, tokenAddress) {
             initialAmount: '100000000',
             initialInputMint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
           },
+          containerClassName: 'jupiter-plugin-instance',
         };
 
         // 如果有 token 地址，设置为输出 token
