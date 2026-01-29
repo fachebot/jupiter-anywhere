@@ -44,5 +44,105 @@
       "urlFilter": "*://debot.ai/*",
       "resourceTypes": ["main_frame", "sub_frame"]
     }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        {
+          "header": "Content-Security-Policy",
+          "operation": "remove"
+        },
+        {
+          "header": "Content-Security-Policy-Report-Only",
+          "operation": "remove"
+        },
+        {
+          "header": "X-Content-Security-Policy",
+          "operation": "remove"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*://backpack.exchange/*",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        {
+          "header": "Content-Security-Policy",
+          "operation": "remove"
+        },
+        {
+          "header": "Content-Security-Policy-Report-Only",
+          "operation": "remove"
+        },
+        {
+          "header": "X-Content-Security-Policy",
+          "operation": "remove"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*://axiom.trade/*",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
+  },
+  {
+    "id": 5,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        {
+          "header": "Content-Security-Policy",
+          "operation": "remove"
+        },
+        {
+          "header": "Content-Security-Policy-Report-Only",
+          "operation": "remove"
+        },
+        {
+          "header": "X-Content-Security-Policy",
+          "operation": "remove"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*://jupiter-plugin-plus.pages.dev/*",
+      "resourceTypes": ["stylesheet", "script", "xmlhttprequest"]
+    }
+  },
+  {
+    "id": 6,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        {
+          "header": "Content-Security-Policy",
+          "operation": "remove"
+        },
+        {
+          "header": "Content-Security-Policy-Report-Only",
+          "operation": "remove"
+        },
+        {
+          "header": "X-Content-Security-Policy",
+          "operation": "remove"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "*",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
   }
 ]
